@@ -1,0 +1,21 @@
+---
+title: "Predicting Video Game Popularity on STEAM specifically"
+author: "group 8"
+output: 
+  html_document:
+    css: bootstrap.css
+    toc: true
+    toc_float: true
+---
+
+## Project motivation:
+
+Amidst the burgeoning gaming industry, popular belief posits genres such as shooters, sports, and racing as perennial favorites. As gamers, our team believes that there is a "success formula" to guarantee the success of video games. Our team's avid gaming experience through STEAM has piqued our interest in this hypothesis. Our objective is to dissect and analyze the veracity of such claims and identify any characteristics that signal the popularity of STEAM games.
+
+## Anticipated data sources:
+
+<https://www.kaggle.com/datasets/fronkongames/steam-games-dataset>
+
+## Final product:
+
+Our final outcome is to develop a predictive model that evaluates a game's potential popularity based on an array of characteristics, with game genres as a primary focus. This model seeks to uncover pivotal attributes that influence a game's market performance and players' reception. However, we acknowledge that there may be various definitions of popularity, and in our study, we hypothesis it as a combination of both sales and score rankings.

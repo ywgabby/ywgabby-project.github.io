@@ -1,0 +1,14 @@
+name: "Yay internet!"
+output_dir: "."
+navbar:
+  title: "Home"
+  right:
+    - text: "EDA"
+      href: EDA.html
+    - text: "Model Fitting"
+      href: model_fitting.html
+    - text: "Our Team"
+      href: our_team.html
+output:
+  html_document:
+    theme: readable

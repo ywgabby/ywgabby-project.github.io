@@ -1,0 +1,909 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+<meta name="author" content="group 8" />
+
+
+<title>EDA</title>
+
+<script src="site_libs/header-attrs-2.24/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/readable.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/jqueryui-1.13.2/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<script src="site_libs/htmlwidgets-1.6.2/htmlwidgets.js"></script>
+<script src="site_libs/plotly-binding-4.10.3/plotly.js"></script>
+<script src="site_libs/typedarray-0.1/typedarray.min.js"></script>
+<link href="site_libs/crosstalk-1.2.0/css/crosstalk.min.css" rel="stylesheet" />
+<script src="site_libs/crosstalk-1.2.0/js/crosstalk.min.js"></script>
+<link href="site_libs/plotly-htmlwidgets-css-2.11.1/plotly-htmlwidgets.css" rel="stylesheet" />
+<script src="site_libs/plotly-main-2.11.1/plotly-latest.min.js"></script>
+<link href="site_libs/wordcloud2-0.0.1/wordcloud.css" rel="stylesheet" />
+<script src="site_libs/wordcloud2-0.0.1/wordcloud2-all.js"></script>
+<script src="site_libs/wordcloud2-0.0.1/hover.js"></script>
+<script src="site_libs/wordcloud2-binding-0.2.1/wordcloud2.js"></script>
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+
+
+
+<link rel="stylesheet" href="bootstrap.css" type="text/css" />
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "\e258";
+  font-family: 'Glyphicons Halflings';
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Home</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a href="EDA.html">EDA</a>
+</li>
+<li>
+  <a href="model_fitting.html">Model Fitting</a>
+</li>
+<li>
+  <a href="our_team.html">Our Team</a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+
+
+<h1 class="title toc-ignore">EDA</h1>
+<h4 class="author">group 8</h4>
+
+</div>
+
+
+<div id="data-import-and-cleaning" class="section level1">
+<h1>Data Import and Cleaning</h1>
+<p>In the process of preparing our data for analysis, we have
+established a set of inclusion and variable selection criteria to ensure
+the relevance of our study. These criteria are vital to the successful
+execution of our data science investigation.</p>
+<p>One of the primary inclusion criteria for our analysis is the
+exclusion of free games from our dataset. This decision is underpinned
+by the understanding that in free-to-play games, in-app purchases often
+serve as viable alternatives to traditional game sales. However, due to
+the unavailability of comprehensive data pertaining to these in-app
+purchases, their inclusion in our analysis would be both impractical and
+imprecise.</p>
+<p>In addition, we have also opted to remove certain variables from our
+dataset that are non-essential for our analysis.</p>
+<p>We eliminate columns containing URLs as they do not contribute
+meaningful information to our analytical objectives.</p>
+<p>Variables associated with game developers and publishers will be
+filtered out for two primary reasons. Firstly, we posit that making
+predictions or quantify the effect of developer names may be
+challenging, if not unfeasible. Secondly, we hypothesize that brand
+effects can be more accurately captured through a combination of game
+features and keywords, for example, there is a tag for independent
+games, which is the complement of games made by large companies.</p>
+<p>Furthermore, we will exclude the variables “Playtime in Current Two
+Weeks” as it may not be representative for older games, and “Average
+Playtime Forever” in favor of “Median Playtime Forever” due to potential
+distortions caused by AFK (Away From Keyboard) gamers.</p>
+<p>It is worth noting that we are cognizant of the need to address
+potential data leakage issues and redundant feature when fitting our
+model. These aspects will be thoroughly addressed in subsequent stages
+of our analysis to ensure the robustness of our findings.</p>
+<pre class="r"><code>df = read.csv(&quot;DATA/games.csv&quot;)|&gt;
+  janitor::clean_names()|&gt;
+  subset(select = -c(dlc_count, about_the_game, reviews, header_image, website, support_url, support_email, metacritic_score, metacritic_url, notes, developers, publishers, screenshots, movies, score_rank, average_playtime_two_weeks, median_playtime_two_weeks, average_playtime_forever, peak_ccu, full_audio_languages))|&gt;
+  subset(price &gt; 0)
+
+#Change the format of release date. 
+df = df|&gt;
+  mutate(release_date = as.Date(release_date, format = &quot;%b %d, %Y&quot;))</code></pre>
+</div>
+<div id="eda" class="section level1">
+<h1>EDA</h1>
+<div id="definition-of-popular-games" class="section level2">
+<h2>Definition of Popular Games</h2>
+<p>In our project, the exploration of key features of popular games
+forms a central objective. To establish a precise definition of “popular
+games” in the context of our analysis, we will primarily adhere to the
+standard set by Steam, a prominent gaming platform [<a
+href="https://www.reddit.com/r/Steam/comments/ivz45n/what_does_the_steam_ratings_like_very_negative_or/"
+class="uri">https://www.reddit.com/r/Steam/comments/ivz45n/what_does_the_steam_ratings_like_very_negative_or/</a>]
+According to Steam’s rating system, we will categorize games as
+“popular” if they fall into the following rating categories: mostly
+positive, positive, very positive, overwhelmingly positive. This
+approach ensures that we consider user sentiment as a crucial aspect of
+popularity.</p>
+<p>However, we recognize that popularity encompasses more than just
+ratings; it also pertains to the volume of users who purchase and engage
+with a game. To account for this broader perspective of popularity, we
+have incorporated the following criteria:</p>
+<p>Estimated Owners: We will exclude games with an estimated owner count
+in the range of 0-0 and 0-20,000. This criteria ensures that we focus on
+games with a substantial user base.</p>
+<p>Median Playtime: Games selected for analysis will have a median
+playtime exceeding 120 minutes. This threshold corresponds to the latest
+time frame within which Steam allows game refunds. This criterion
+further refines our definition of popular games by considering active
+engagement and retention, which are indicative of a game’s enduring
+appeal.</p>
+<p>By combining these rating, ownership, and playtime criteria, we aim
+to create a comprehensive definition of “popular games” that accounts
+for both user sentiment and the size of the player base, enabling us to
+explore key features that contribute to a game’s popularity in a
+holistic manner.</p>
+<pre class="r"><code>df_popular = df|&gt;
+  subset((positive+negative) &gt; 10)|&gt;
+  subset(positive/(positive+negative) &gt; 0.7)|&gt;
+  subset(estimated_owners != &quot;0 - 20000&quot;)|&gt;
+  subset(estimated_owners != &quot;0 - 0&quot;)|&gt;
+  subset(median_playtime_forever &gt; 120)
+
+df_unpopular = anti_join(df, df_popular, by=&quot;app_id&quot;)</code></pre>
+</div>
+<div id="price-distribution-of-popular-and-unpopular-games"
+class="section level2">
+<h2>Price Distribution of Popular and Unpopular Games</h2>
+<pre class="r"><code>summary(pull(df_popular, price))</code></pre>
+<pre><code>##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+##    0.49    5.99   12.99   15.24   19.99   99.99</code></pre>
+<pre class="r"><code>summary(pull(df_unpopular, price))</code></pre>
+<pre><code>##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+##   0.290   2.690   4.990   8.164   9.990 999.000</code></pre>
+<p>Based on tables, it is evident that popular games consistently
+exhibit higher prices when compared to their less popular counterparts
+across all quadrants. This trend can be logically attributed to several
+key factors that play a pivotal role in shaping the pricing dynamics
+within the gaming industry. Game</p>
+<p>Mechanics: Popular games often incorporate complex and engaging game
+mechanics that elevate the overall gaming experience. The development
+and refinement of such intricate mechanics requires investment in terms
+of design, testing, and optimization, all of which contribute to higher
+production costs and reflect on the final price.</p>
+<p>Animation Effects: The visually captivating animation effects is a
+hallmark of popular games. These effects enhance immersion and player
+engagement, but their creation requires the expertise of skilled artists
+and animators, thereby increasing development expenses.</p>
+<p>Game Optimization: Popular games prioritize performance optimization
+to ensure smooth gameplay across a wide range of hardware
+configurations(although some popular games still have tons of bugs).
+Achieving such optimization demands rigorous coding and testing efforts,
+which in turn incur additional costs.</p>
+<p>Also, we used statistical test to test whether there is difference in
+the two price distribution.</p>
+<pre class="r"><code>df_unpopular = df_unpopular|&gt;subset(name != &quot;Ascent Free-Roaming VR Experience&quot;)
+
+combined_data = rbind(data.frame(dataset = &quot;unpopular&quot;, price = log(df_unpopular$price)),
+                       data.frame(dataset = &quot;popular&quot;, price = log(df_popular$price)))
+
+ggplot(data = combined_data, aes(x = price, fill = dataset)) +
+  geom_histogram(aes(y = ..density..), binwidth = 0.75)+
+  facet_grid(~dataset)</code></pre>
+<p><img src="EDA_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
+<p>The two distribution loos approximately normal, so we decide to use
+T-test to test whether two groups’s log transformed price have similar
+distribution.</p>
+<p>H0: they have same mean price H1: they have different mean price</p>
+<pre class="r"><code>result &lt;- t.test(log(df_popular$price), log(df_unpopular$price))
+result</code></pre>
+<pre><code>## 
+##  Welch Two Sample t-test
+## 
+## data:  log(df_popular$price) and log(df_unpopular$price)
+## t = 52.203, df = 6600.4, p-value &lt; 2.2e-16
+## alternative hypothesis: true difference in means is not equal to 0
+## 95 percent confidence interval:
+##  0.7035047 0.7584022
+## sample estimates:
+## mean of x mean of y 
+##  2.346463  1.615510</code></pre>
+<p>The result shows a p-value smaller than 0.05, so we reject the null
+and conclude that the two groups have different mean price.</p>
+</div>
+<div id="price-distribution-of-games-with-different-estimated-owners"
+class="section level2">
+<h2>Price Distribution of Games with Different Estimated Owners</h2>
+<pre class="r"><code># we filter out Ascent Free-Roaming VR Experience since its price is 1000 dollars, which will make it hard to see any trend from our plot. 
+df|&gt;
+  subset(name != &quot;Ascent Free-Roaming VR Experience&quot;)|&gt;
+  separate_wider_delim(cols = estimated_owners, delim = &quot; - &quot;, names = c(&quot;estimate_low&quot;, &quot;estimate_high&quot;))|&gt;
+  mutate(estimate_low = as.numeric(estimate_low))|&gt;
+  mutate(estimate_high = as.numeric(estimate_high))|&gt;
+  mutate(estimate_mean = (estimate_high + estimate_low)/2)|&gt;
+  mutate(estimate_mean = factor(estimate_mean))|&gt;
+  ggplot(aes(x = estimate_mean, y = price))+
+  geom_boxplot()+
+  coord_flip()</code></pre>
+<p><img src="EDA_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
+<p>From the price distribution plot of games categorized by different
+estimated owner counts, a notable pattern emerges. Specifically, games
+with a greater number of estimated owners tend to exhibit relatively
+higher prices. However, an intriguing observation is that once a certain
+threshold of estimated owners is reached, the prices of games begin to
+decline. ### Overall frequency of keywords(genre, categories, tags)</p>
+<p>Here, we try to explore the trend of keywords in genre, categories,
+tags.</p>
+<pre class="r"><code>categories_freq = df|&gt;
+  separate_rows(categories, sep = &quot;,&quot;)|&gt;
+  group_by(categories)|&gt;
+  summarise(n_obs = n())|&gt;
+  arrange(desc(n_obs))|&gt;
+  ggplot(aes(x = reorder(categories, +n_obs), y = n_obs))+
+  geom_bar(stat=&quot;identity&quot;)+
+  theme(axis.text.x = element_text(angle = 90, vjust = 1, hjust=1)) +
+  coord_flip()
+
+categories_freq</code></pre>
+<p><img src="EDA_files/figure-html/unnamed-chunk-9-1.png" width="672" /></p>
+<p>From the bar plot, it is evident that single-player games have
+highest frequency in our dataset, this is reasonable since multi-player
+games require higher optimization, single player games is the best
+choice for independent game maker. The VR related categories have low
+frequency in games, this is because the equipment is expensive and the
+technology is relatively new.</p>
+<pre class="r"><code>genre_freq = df|&gt;
+  separate_rows(genres, sep = &quot;,&quot;)|&gt;
+  group_by(genres)|&gt;
+  summarise(n_obs = n())|&gt;
+  arrange(desc(n_obs))|&gt;
+  ggplot(aes(x = reorder(genres, +n_obs), y = n_obs))+
+  geom_bar(stat=&quot;identity&quot;)+
+  theme(axis.text.x = element_text(angle = 90, vjust = 1, hjust=1)) +
+  coord_flip()
+
+genre_freq</code></pre>
+<p><img src="EDA_files/figure-html/unnamed-chunk-10-1.png" width="672" /></p>
+<p>For the bar plot of genre, besides the most frequency keyword indie,
+other keywords are common when we talk about games. Sport, Racing,
+Action, Adventures includes most of the games genere.</p>
+<pre class="r"><code>tags_freq = df|&gt;
+  separate_rows(tags, sep = &quot;,&quot;)|&gt;
+  group_by(tags)|&gt;
+  summarise(n_obs = n())|&gt;
+  subset(n_obs &gt;= 5000)|&gt;
+  arrange(desc(n_obs))|&gt;
+  ggplot(aes(x = reorder(tags, +n_obs), y = n_obs))+
+  geom_bar(stat=&quot;identity&quot;)+
+  theme(axis.text.x = element_text(angle = 90, vjust = 1, hjust=1)) +
+  coord_flip()
+
+tags_freq</code></pre>
+<p><img src="EDA_files/figure-html/unnamed-chunk-11-1.png" width="672" /></p>
+<p>As there are too many tags in steam, we only show most frequent tags,
+interestingly, we found there are more puzzle games compared to RPG,
+this might because the development cost of puzzle games are lower than
+RPG.</p>
+</div>
+<div id="trend-of-keywords-frequency-across-different-years"
+class="section level2">
+<h2>Trend of Keywords Frequency across Different Years</h2>
+<p>It might be informative to visualize the trend change of game genre
+developed in different years since WOW might be good game at 2000s,
+while games like Overwatch might be better game in 2020s.</p>
+<pre class="r"><code>genre_freq_year = df|&gt;
+  mutate(year = year(release_date))|&gt;
+  separate_rows(genres, sep = &quot;,&quot;)|&gt;
+  group_by(year, genres)|&gt;
+  summarise(n_obs = n())|&gt;
+  group_by(year)</code></pre>
+<pre class="r"><code>genre_freq_year_total = df|&gt;
+  mutate(year = year(release_date))|&gt;
+  separate_rows(genres, sep = &quot;,&quot;)|&gt;
+  group_by(year)|&gt;
+  summarise(n_obs_total = n())
+  
+
+genre_freq_year_total|&gt;
+  knitr::kable()</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="right">year</th>
+<th align="right">n_obs_total</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">1997</td>
+<td align="right">3</td>
+</tr>
+<tr class="even">
+<td align="right">1998</td>
+<td align="right">1</td>
+</tr>
+<tr class="odd">
+<td align="right">1999</td>
+<td align="right">2</td>
+</tr>
+<tr class="even">
+<td align="right">2000</td>
+<td align="right">2</td>
+</tr>
+<tr class="odd">
+<td align="right">2001</td>
+<td align="right">7</td>
+</tr>
+<tr class="even">
+<td align="right">2002</td>
+<td align="right">2</td>
+</tr>
+<tr class="odd">
+<td align="right">2003</td>
+<td align="right">7</td>
+</tr>
+<tr class="even">
+<td align="right">2004</td>
+<td align="right">7</td>
+</tr>
+<tr class="odd">
+<td align="right">2005</td>
+<td align="right">10</td>
+</tr>
+<tr class="even">
+<td align="right">2006</td>
+<td align="right">79</td>
+</tr>
+<tr class="odd">
+<td align="right">2007</td>
+<td align="right">118</td>
+</tr>
+<tr class="even">
+<td align="right">2008</td>
+<td align="right">231</td>
+</tr>
+<tr class="odd">
+<td align="right">2009</td>
+<td align="right">481</td>
+</tr>
+<tr class="even">
+<td align="right">2010</td>
+<td align="right">420</td>
+</tr>
+<tr class="odd">
+<td align="right">2011</td>
+<td align="right">481</td>
+</tr>
+<tr class="even">
+<td align="right">2012</td>
+<td align="right">659</td>
+</tr>
+<tr class="odd">
+<td align="right">2013</td>
+<td align="right">1011</td>
+</tr>
+<tr class="even">
+<td align="right">2014</td>
+<td align="right">3317</td>
+</tr>
+<tr class="odd">
+<td align="right">2015</td>
+<td align="right">6109</td>
+</tr>
+<tr class="even">
+<td align="right">2016</td>
+<td align="right">9859</td>
+</tr>
+<tr class="odd">
+<td align="right">2017</td>
+<td align="right">14823</td>
+</tr>
+<tr class="even">
+<td align="right">2018</td>
+<td align="right">19054</td>
+</tr>
+<tr class="odd">
+<td align="right">2019</td>
+<td align="right">18579</td>
+</tr>
+<tr class="even">
+<td align="right">2020</td>
+<td align="right">22781</td>
+</tr>
+<tr class="odd">
+<td align="right">2021</td>
+<td align="right">27695</td>
+</tr>
+<tr class="even">
+<td align="right">2022</td>
+<td align="right">30739</td>
+</tr>
+<tr class="odd">
+<td align="right">2023</td>
+<td align="right">20382</td>
+</tr>
+<tr class="even">
+<td align="right">NA</td>
+<td align="right">277</td>
+</tr>
+</tbody>
+</table>
+<p>We could see from the table that there are very few games on steam
+before 2006, genre frequency might be strongly affected by randomness in
+those years, so we choose only to plot the trend after 2005.</p>
+<pre class="r"><code>#Where we limit the year to later than 2002 since steam is lauched in 2002, we think the game before 2002 might be not representative. 
+left_join(genre_freq_year, genre_freq_year_total, by = &quot;year&quot;)|&gt;
+  subset(year &gt; 2005)|&gt;
+  mutate(genre_ratio = n_obs/n_obs_total)|&gt;
+  ungroup()|&gt;
+  plot_ly(x = ~year, y = ~genre_ratio, color = ~genres, type = &quot;scatter&quot;, mode = &quot;lines+markers&quot;,  colors = &quot;viridis&quot;)</code></pre>
+<div class="plotly html-widget html-fill-item-overflow-hidden html-fill-item" id="htmlwidget-d6a641256cd2a473a963" style="width:672px;height:480px;"></div>
+<script type="application/json" data-for="htmlwidget-d6a641256cd2a473a963">{"x":{"visdat":{"12bce5fbf69e":["function () ","plotlyVisDat"]},"cur_data":"12bce5fbf69e","attrs":{"12bce5fbf69e":{"x":{},"y":{},"mode":"lines+markers","color":{},"colors":"viridis","alpha_stroke":1,"sizes":[10,100],"spans":[1,20],"type":"scatter"}},"layout":{"margin":{"b":40,"l":60,"t":25,"r":10},"xaxis":{"domain":[0,1],"automargin":true,"title":"year"},"yaxis":{"domain":[0,1],"automargin":true,"title":"genre_ratio"},"hovermode":"closest","showlegend":true},"source":"A","config":{"modeBarButtonsToAdd":["hoverclosest","hovercompare"],"showSendToCloud":false},"data":[{"x":[2008,2009,2010,2011,2012,2013,2014,2016,2017,2018,2019,2020,2021,2022,2023],"y":[0.008658008658008658,0.0083160083160083165,0.019047619047619049,0.0062370062370062374,0.016691957511380879,0.00098911968348170125,0.00060295447693699126,0.00020286033066233897,0.00060716454159077113,0.00052482418389839403,0.00021529684051886538,0.0001316886879417058,0.00014443040259974724,9.7595887959920616e-05,4.9062898636051415e-05],"mode":"lines+markers","type":"scatter","marker":{"color":"rgba(68,1,84,1)","line":{"color":"rgba(68,1,84,1)"}},"textfont":{"color":"rgba(68,1,84,1)"},"error_y":{"color":"rgba(68,1,84,1)"},"error_x":{"color":"rgba(68,1,84,1)"},"line":{"color":"rgba(68,1,84,1)"},"xaxis":"x","yaxis":"y","frame":null},{"x":[2020],"y":[4.3896229313901934e-05],"mode":"lines+markers","type":"scatter","name":"360 Video","marker":{"color":"rgba(71,12,95,1)","line":{"color":"rgba(71,12,95,1)"}},"textfont":{"color":"rgba(71,12,95,1)"},"error_y":{"color":"rgba(71,12,95,1)"},"error_x":{"color":"rgba(71,12,95,1)"},"line":{"color":"rgba(71,12,95,1)"},"xaxis":"x","yaxis":"y","frame":null},{"x":[2016,2017,2018,2019,2020,2021],"y":[0.00010143016533116949,0.00013492545368683803,0.00020992967355935762,0.00010764842025943269,0.0001316886879417058,3.610760064993681e-05],"mode":"lines+markers","type":"scatter","name":"Accounting","marker":{"color":"rgba(72,23,105,1)","line":{"color":"rgba(72,23,105,1)"}},"textfont":{"color":"rgba(72,23,105,1)"},"error_y":{"color":"rgba(72,23,105,1)"},"error_x":{"color":"rgba(72,23,105,1)"},"line":{"color":"rgba(72,23,105,1)"},"xaxis":"x","yaxis":"y","frame":null},{"x":[2006,2007,2008,2009,2010,2011,2012,2013,2014,2015,2016,2017,2018,2019,2020,2021,2022,2023],"y":[0.20253164556962025,0.47457627118644069,0.25541125541125542,0.21413721413721415,0.24523809523809523,0.22661122661122662,0.23672230652503792,0.20969337289812068,0.17455532107325897,0.16483876248158455,0.16776549345775435,0.15887472171625178,0.14852524404324552,0.14607890629205017,0.14858873622755805,0.14258891496660048,0.13982237548391294,0.14149739966637229],"mode":"lines+markers","type":"scatter","name":"Action","marker":{"color":"rgba(72,33,115,1)","line":{"color":"rgba(72,33,115,1)"}},"textfont":{"color":"rgba(72,33,115,1)"},"error_y":{"color":"rgba(72,33,115,1)"},"error_x":{"color":"rgba(72,33,115,1)"},"line":{"color":"rgba(72,33,115,1)"},"xaxis":"x","yaxis":"y","frame":null},{"x":[2007,2008,2009,2010,2011,2012,2013,2014,2015,2016,2017,2018,2019,2020,2021,2022,2023],"y":[0.076271186440677971,0.10822510822510822,0.15176715176715178,0.11666666666666667,0.12058212058212059,0.15022761760242792,0.16023738872403562,0.16430509496533011,0.15174332951383204,0.13916218683436454,0.13897321729744316,0.13078618662747979,0.14139620001076483,0.13888766954918572,0.14453872540169704,0.1434659553010833,0.14223334314591307],"mode":"lines+markers","type":"scatter","name":"Adventure","marker":{"color":"rgba(71,44,122,1)","line":{"color":"rgba(71,44,122,1)"}},"textfont":{"color":"rgba(71,44,122,1)"},"error_y":{"color":"rgba(71,44,122,1)"},"error_x":{"color":"rgba(71,44,122,1)"},"line":{"color":"rgba(71,44,122,1)"},"xaxis":"x","yaxis":"y","frame":null},{"x":[2012,2013,2014,2015,2016,2017,2018,2019,2020,2021,2022,2023],"y":[0.0015174506828528073,0.002967359050445104,0.0021103406692794696,0.0016369291209690621,0.0022314636372857289,0.0016191054442420564,0.0016269549700850215,0.0017223747241509231,0.00136078310873096,0.0011554432207979779,0.0010735547675591269,0.0013737611618094398],"mode":"lines+markers","type":"scatter","name":"Animation & Modeling","marker":{"color":"rgba(69,53,129,1)","line":{"color":"rgba(69,53,129,1)"}},"textfont":{"color":"rgba(69,53,129,1)"},"error_y":{"color":"rgba(69,53,129,1)"},"error_x":{"color":"rgba(69,53,129,1)"},"line":{"color":"rgba(69,53,129,1)"},"xaxis":"x","yaxis":"y","frame":null},{"x":[2013,2014,2015,2016,2017,2018,2019,2020,2021,2022,2023],"y":[0.00098911968348170125,0.0012059089538739825,0.00049107873629071865,0.0014200223146363729,0.0012143290831815423,0.0008397186942374305,0.0011303084127240433,0.00092182081559194062,0.00083047481494854668,0.00042291551449298939,0.00029437739181630853],"mode":"lines+markers","type":"scatter","name":"Audio Production","marker":{"color":"rgba(67,62,133,1)","line":{"color":"rgba(67,62,133,1)"}},"textfont":{"color":"rgba(67,62,133,1)"},"error_y":{"color":"rgba(67,62,133,1)"},"error_x":{"color":"rgba(67,62,133,1)"},"line":{"color":"rgba(67,62,133,1)"},"xaxis":"x","yaxis":"y","frame":null},{"x":[2006,2007,2008,2009,2010,2011,2012,2013,2014,2015,2016,2017,2018,2019,2020,2021,2022,2023],"y":[0.21518987341772153,0.084745762711864403,0.17316017316017315,0.12681912681912683,0.16428571428571428,0.087318087318087323,0.077389984825493169,0.083086053412462904,0.11456135061802834,0.11229333769847766,0.14017648848767625,0.14551710180125479,0.16038627059934921,0.14946983153022228,0.15473420833150434,0.16277306372991515,0.15843065812160448,0.15920910607398686],"mode":"lines+markers","type":"scatter","name":"Casual","marker":{"color":"rgba(63,71,136,1)","line":{"color":"rgba(63,71,136,1)"}},"textfont":{"color":"rgba(63,71,136,1)"},"error_y":{"color":"rgba(63,71,136,1)"},"error_x":{"color":"rgba(63,71,136,1)"},"line":{"color":"rgba(63,71,136,1)"},"xaxis":"x","yaxis":"y","frame":null},{"x":[2012,2013,2014,2015,2016,2017,2018,2019,2020,2021,2022,2023],"y":[0.0015174506828528073,0.0019782393669634025,0.0042206813385589391,0.0026190865935504992,0.0031443351252662542,0.0026985090737367606,0.0020468143172037369,0.0025835620862263847,0.002019226548439489,0.0016970572305470301,0.0010410228049058199,0.0014718869590815426],"mode":"lines+markers","type":"scatter","name":"Design & Illustration","marker":{"color":"rgba(60,80,139,1)","line":{"color":"rgba(60,80,139,1)"}},"textfont":{"color":"rgba(60,80,139,1)"},"error_y":{"color":"rgba(60,80,139,1)"},"error_x":{"color":"rgba(60,80,139,1)"},"line":{"color":"rgba(60,80,139,1)"},"xaxis":"x","yaxis":"y","frame":null},{"x":[2020],"y":[4.3896229313901934e-05],"mode":"lines+markers","type":"scatter","name":"Documentary","marker":{"color":"rgba(56,89,140,1)","line":{"color":"rgba(56,89,140,1)"}},"textfont":{"color":"rgba(56,89,140,1)"},"error_y":{"color":"rgba(56,89,140,1)"},"error_x":{"color":"rgba(56,89,140,1)"},"line":{"color":"rgba(56,89,140,1)"},"xaxis":"x","yaxis":"y","frame":null},{"x":[2013,2014,2015,2016,2017,2018,2019,2020,2021,2022,2023],"y":[0.004945598417408506,0.01236056677720832,0.021116385660500902,0.031849071913987219,0.032247183431154285,0.033063923585598821,0.037407826040152858,0.038804266713489313,0.045964975627369564,0.061127557825563617,0.065204592287312332],"mode":"lines+markers","type":"scatter","name":"Early Access","marker":{"color":"rgba(52,96,141,1)","line":{"color":"rgba(52,96,141,1)"}},"textfont":{"color":"rgba(52,96,141,1)"},"error_y":{"color":"rgba(52,96,141,1)"},"error_x":{"color":"rgba(52,96,141,1)"},"line":{"color":"rgba(52,96,141,1)"},"xaxis":"x","yaxis":"y","frame":null},{"x":[2013,2014,2015,2016,2017,2018,2019,2020,2021,2022,2023],"y":[0.0019782393669634025,0.0027132951462164605,0.0018006220330659681,0.0020286033066233898,0.0025635836200499224,0.0012595780413561456,0.0016685505140212067,0.0012729906501031561,0.0011915508214479149,0.00097595887959920627,0.0006868805809047199],"mode":"lines+markers","type":"scatter","name":"Education","marker":{"color":"rgba(49,104,142,1)","line":{"color":"rgba(49,104,142,1)"}},"textfont":{"color":"rgba(49,104,142,1)"},"error_y":{"color":"rgba(49,104,142,1)"},"error_x":{"color":"rgba(49,104,142,1)"},"line":{"color":"rgba(49,104,142,1)"},"xaxis":"x","yaxis":"y","frame":null},{"x":[2020],"y":[4.3896229313901934e-05],"mode":"lines+markers","type":"scatter","name":"Episodic","marker":{"color":"rgba(45,112,142,1)","line":{"color":"rgba(45,112,142,1)"}},"textfont":{"color":"rgba(45,112,142,1)"},"error_y":{"color":"rgba(45,112,142,1)"},"error_x":{"color":"rgba(45,112,142,1)"},"line":{"color":"rgba(45,112,142,1)"},"xaxis":"x","yaxis":"y","frame":null},{"x":[2011,2013,2014,2015,2016,2017,2018,2019,2020,2021,2022,2023],"y":[0.0020790020790020791,0.0019782393669634025,0.00060295447693699126,0.0003273858241938124,0.00030429049599350845,0.00067462726843419015,0.0015219901333053427,0.0011841326228537595,0.0017119529432421754,0.0010110128181982307,0.0014314063567455024,0.0014228240604454911],"mode":"lines+markers","type":"scatter","name":"Free to Play","marker":{"color":"rgba(42,118,142,1)","line":{"color":"rgba(42,118,142,1)"}},"textfont":{"color":"rgba(42,118,142,1)"},"error_y":{"color":"rgba(42,118,142,1)"},"error_x":{"color":"rgba(42,118,142,1)"},"line":{"color":"rgba(42,118,142,1)"},"xaxis":"x","yaxis":"y","frame":null},{"x":[2013,2015,2016,2017,2018,2019,2020,2021,2022,2023],"y":[0.00098911968348170125,0.0006547716483876248,0.00060858099198701689,0.00013492545368683803,0.00057730660228823348,0.0012379568329834759,0.00087792458627803868,0.0012998736233977252,0.00084583102898597878,0.0010793837699931313],"mode":"lines+markers","type":"scatter","name":"Game Development","marker":{"color":"rgba(39,126,142,1)","line":{"color":"rgba(39,126,142,1)"}},"textfont":{"color":"rgba(39,126,142,1)"},"error_y":{"color":"rgba(39,126,142,1)"},"error_x":{"color":"rgba(39,126,142,1)"},"line":{"color":"rgba(39,126,142,1)"},"xaxis":"x","yaxis":"y","frame":null},{"x":[2012,2013,2015,2016,2017,2018,2019],"y":[0.0015174506828528073,0.00098911968348170125,0.00049107873629071865,0.0029414747946039151,0.0093773190312352421,0.0045659703999160282,5.3824210129716346e-05],"mode":"lines+markers","type":"scatter","name":"Gore","marker":{"color":"rgba(37,133,142,1)","line":{"color":"rgba(37,133,142,1)"}},"textfont":{"color":"rgba(37,133,142,1)"},"error_y":{"color":"rgba(37,133,142,1)"},"error_x":{"color":"rgba(37,133,142,1)"},"line":{"color":"rgba(37,133,142,1)"},"xaxis":"x","yaxis":"y","frame":null},{"x":[2006,2007,2008,2009,2010,2011,2012,2013,2014,2015,2016,2017,2018,2019,2020,2021,2022,2023],"y":[0.11392405063291139,0.059322033898305086,0.099567099567099568,0.11850311850311851,0.15238095238095239,0.20790020790020791,0.2488619119878604,0.24925816023738873,0.24057883629785951,0.27664102144377151,0.26818135713561214,0.25993388652769345,0.27437808334208041,0.2693901716992303,0.26482595145077037,0.25596678100740206,0.24519340251797392,0.2369247375134923],"mode":"lines+markers","type":"scatter","name":"Indie","marker":{"color":"rgba(34,141,141,1)","line":{"color":"rgba(34,141,141,1)"}},"textfont":{"color":"rgba(34,141,141,1)"},"error_y":{"color":"rgba(34,141,141,1)"},"error_x":{"color":"rgba(34,141,141,1)"},"line":{"color":"rgba(34,141,141,1)"},"xaxis":"x","yaxis":"y","frame":null},{"x":[2009,2010,2011,2013,2014,2015,2016,2017,2018,2019,2020,2021,2022,2023],"y":[0.0083160083160083165,0.0023809523809523812,0.0020790020790020791,0.002967359050445104,0.002411817907747965,0.0026190865935504992,0.0041586367785779489,0.0039128381569183022,0.0049858297470347437,0.0055977178534904999,0.005969887186690663,0.0050911716916410901,0.0050424542112625656,0.0043175350799725251],"mode":"lines+markers","type":"scatter","name":"Massively Multiplayer","marker":{"color":"rgba(32,147,140,1)","line":{"color":"rgba(32,147,140,1)"}},"textfont":{"color":"rgba(32,147,140,1)"},"error_y":{"color":"rgba(32,147,140,1)"},"error_x":{"color":"rgba(32,147,140,1)"},"line":{"color":"rgba(32,147,140,1)"},"xaxis":"x","yaxis":"y","frame":null},{"x":[2020],"y":[4.3896229313901934e-05],"mode":"lines+markers","type":"scatter","name":"Movie","marker":{"color":"rgba(30,155,138,1)","line":{"color":"rgba(30,155,138,1)"}},"textfont":{"color":"rgba(30,155,138,1)"},"error_y":{"color":"rgba(30,155,138,1)"},"error_x":{"color":"rgba(30,155,138,1)"},"line":{"color":"rgba(30,155,138,1)"},"xaxis":"x","yaxis":"y","frame":null},{"x":[2009,2014,2016,2017,2018],"y":[0.0020790020790020791,0.00030147723846849563,0.0012171619839740338,0.0037779127032314644,0.0018893670620342186],"mode":"lines+markers","type":"scatter","name":"Nudity","marker":{"color":"rgba(31,162,135,1)","line":{"color":"rgba(31,162,135,1)"}},"textfont":{"color":"rgba(31,162,135,1)"},"error_y":{"color":"rgba(31,162,135,1)"},"error_x":{"color":"rgba(31,162,135,1)"},"line":{"color":"rgba(31,162,135,1)"},"xaxis":"x","yaxis":"y","frame":null},{"x":[2012,2014,2015,2016,2017,2018,2019,2020,2021,2022,2023],"y":[0.0015174506828528073,0.00060295447693699126,0.0009821574725814373,0.00071001115731818645,0.00067462726843419015,0.00047234176550855464,0.00053824210129716345,0.00035116983451121547,0.00064993681169886258,0.00039038355183968246,0.00039250318908841132],"mode":"lines+markers","type":"scatter","name":"Photo Editing","marker":{"color":"rgba(36,170,131,1)","line":{"color":"rgba(36,170,131,1)"}},"textfont":{"color":"rgba(36,170,131,1)"},"error_y":{"color":"rgba(36,170,131,1)"},"error_x":{"color":"rgba(36,170,131,1)"},"line":{"color":"rgba(36,170,131,1)"},"xaxis":"x","yaxis":"y","frame":null},{"x":[2006,2007,2008,2009,2010,2011,2012,2013,2014,2015,2016,2017,2018,2019,2020,2021,2022,2023],"y":[0.050632911392405063,0.067796610169491525,0.064935064935064929,0.085239085239085244,0.073809523809523811,0.083160083160083165,0.071320182094081946,0.071216617210682495,0.075972264094060896,0.072024881322638734,0.050207931838928896,0.048100924239357752,0.054529232707043143,0.065073470046827064,0.06026952284798736,0.063116085936089542,0.067145970916425393,0.065400843881856546],"mode":"lines+markers","type":"scatter","name":"RPG","marker":{"color":"rgba(53,183,121,1)","line":{"color":"rgba(53,183,121,1)"}},"textfont":{"color":"rgba(53,183,121,1)"},"error_y":{"color":"rgba(53,183,121,1)"},"error_x":{"color":"rgba(53,183,121,1)"},"line":{"color":"rgba(53,183,121,1)"},"xaxis":"x","yaxis":"y","frame":null},{"x":[2006,2007,2008,2009,2010,2011,2012,2013,2014,2015,2016,2017,2018,2019,2020,2021,2022,2023],"y":[0.050632911392405063,0.033898305084745763,0.03896103896103896,0.020790020790020791,0.016666666666666666,0.020790020790020791,0.016691957511380879,0.016815034619188922,0.017184202592704249,0.013750204616140122,0.013084491327720865,0.013020306280779869,0.013750393618137924,0.01356370095268852,0.012466529125148149,0.013468135042426431,0.014411659455414946,0.014473555097635168],"mode":"lines+markers","type":"scatter","name":"Racing","marker":{"color":"rgba(43,176,127,1)","line":{"color":"rgba(43,176,127,1)"}},"textfont":{"color":"rgba(43,176,127,1)"},"error_y":{"color":"rgba(43,176,127,1)"},"error_x":{"color":"rgba(43,176,127,1)"},"line":{"color":"rgba(43,176,127,1)"},"xaxis":"x","yaxis":"y","frame":null},{"x":[2016,2017,2018],"y":[0.00091287148798052545,0.0031707481616406936,0.0019943318988138972],"mode":"lines+markers","type":"scatter","name":"Sexual Content","marker":{"color":"rgba(65,190,113,1)","line":{"color":"rgba(65,190,113,1)"}},"textfont":{"color":"rgba(65,190,113,1)"},"error_y":{"color":"rgba(65,190,113,1)"},"error_x":{"color":"rgba(65,190,113,1)"},"line":{"color":"rgba(65,190,113,1)"},"xaxis":"x","yaxis":"y","frame":null},{"x":[2020],"y":[4.3896229313901934e-05],"mode":"lines+markers","type":"scatter","name":"Short","marker":{"color":"rgba(81,196,106,1)","line":{"color":"rgba(81,196,106,1)"}},"textfont":{"color":"rgba(81,196,106,1)"},"error_y":{"color":"rgba(81,196,106,1)"},"error_x":{"color":"rgba(81,196,106,1)"},"line":{"color":"rgba(81,196,106,1)"},"xaxis":"x","yaxis":"y","frame":null},{"x":[2006,2007,2008,2009,2010,2011,2012,2013,2014,2015,2016,2017,2018,2019,2020,2021,2022,2023],"y":[0.012658227848101266,0.0084745762711864406,0.095238095238095233,0.10395010395010396,0.066666666666666666,0.058212058212058215,0.05614567526555387,0.068249258160237386,0.067832378655411515,0.068259944344409892,0.07150826655847449,0.066653174121297981,0.069171827437808336,0.070186770009150121,0.075413721961283528,0.072829030510922543,0.072611340642180944,0.078402512020410167],"mode":"lines+markers","type":"scatter","name":"Simulation","marker":{"color":"rgba(97,202,96,1)","line":{"color":"rgba(97,202,96,1)"}},"textfont":{"color":"rgba(97,202,96,1)"},"error_y":{"color":"rgba(97,202,96,1)"},"error_x":{"color":"rgba(97,202,96,1)"},"line":{"color":"rgba(97,202,96,1)"},"xaxis":"x","yaxis":"y","frame":null},{"x":[2013,2014,2015,2016,2017,2018,2019,2020,2021,2022,2023],"y":[0.0019782393669634025,0.002411817907747965,0.0037649369782288425,0.00081144132264935589,0.00074208999527760916,0.00057730660228823348,0.0010764842025943269,0.00065844343970852901,0.00057772161039898896,0.00055304336510621688,0.00029437739181630853],"mode":"lines+markers","type":"scatter","name":"Software Training","marker":{"color":"rgba(115,208,86,1)","line":{"color":"rgba(115,208,86,1)"}},"textfont":{"color":"rgba(115,208,86,1)"},"error_y":{"color":"rgba(115,208,86,1)"},"error_x":{"color":"rgba(115,208,86,1)"},"line":{"color":"rgba(115,208,86,1)"},"xaxis":"x","yaxis":"y","frame":null},{"x":[2008,2009,2010,2011,2012,2013,2014,2015,2016,2017,2018,2019,2020,2021,2022,2023],"y":[0.008658008658008658,0.016632016632016633,0.0047619047619047623,0.012474012474012475,0.0075872534142640367,0.011869436201780416,0.014169430208019295,0.01424128335243084,0.019576021908915713,0.019429265330904676,0.018683740946782827,0.01722374724150923,0.017470699266932972,0.014406932659324788,0.015973193662773676,0.016239819448533019],"mode":"lines+markers","type":"scatter","name":"Sports","marker":{"color":"rgba(133,213,74,1)","line":{"color":"rgba(133,213,74,1)"}},"textfont":{"color":"rgba(133,213,74,1)"},"error_y":{"color":"rgba(133,213,74,1)"},"error_x":{"color":"rgba(133,213,74,1)"},"line":{"color":"rgba(133,213,74,1)"},"xaxis":"x","yaxis":"y","frame":null},{"x":[2006,2007,2008,2009,2010,2011,2012,2013,2014,2015,2016,2017,2018,2019,2020,2021,2022,2023],"y":[0.35443037974683544,0.19491525423728814,0.1471861471861472,0.14137214137214138,0.1380952380952381,0.17255717255717257,0.10925644916540213,0.096933728981206724,0.093759421163702145,0.083155999345228354,0.068465361598539401,0.064764217769682247,0.061089535005773063,0.06609613003929167,0.068346429041745316,0.065788048384184866,0.066690523439279087,0.066333038955941517],"mode":"lines+markers","type":"scatter","name":"Strategy","marker":{"color":"rgba(153,216,61,1)","line":{"color":"rgba(153,216,61,1)"}},"textfont":{"color":"rgba(153,216,61,1)"},"error_y":{"color":"rgba(153,216,61,1)"},"error_x":{"color":"rgba(153,216,61,1)"},"line":{"color":"rgba(153,216,61,1)"},"xaxis":"x","yaxis":"y","frame":null},{"x":[2020],"y":[4.3896229313901934e-05],"mode":"lines+markers","type":"scatter","name":"Tutorial","marker":{"color":"rgba(173,220,48,1)","line":{"color":"rgba(173,220,48,1)"}},"textfont":{"color":"rgba(173,220,48,1)"},"error_y":{"color":"rgba(173,220,48,1)"},"error_x":{"color":"rgba(173,220,48,1)"},"line":{"color":"rgba(173,220,48,1)"},"xaxis":"x","yaxis":"y","frame":null},{"x":[2013,2014,2015,2016,2017,2018,2019,2020,2021,2022,2023],"y":[0.0059347181008902079,0.0051251130539644255,0.0037649369782288425,0.0033471954559285933,0.0038453754300748835,0.003096462685000525,0.0050594757521933362,0.0030288398226592335,0.0032857916591442497,0.0022447054230781741,0.0018643901481699538],"mode":"lines+markers","type":"scatter","name":"Utilities","marker":{"color":"rgba(194,223,35,1)","line":{"color":"rgba(194,223,35,1)"}},"textfont":{"color":"rgba(194,223,35,1)"},"error_y":{"color":"rgba(194,223,35,1)"},"error_x":{"color":"rgba(194,223,35,1)"},"line":{"color":"rgba(194,223,35,1)"},"xaxis":"x","yaxis":"y","frame":null},{"x":[2013,2014,2015,2016,2017,2018,2019,2020,2021,2022,2023],"y":[0.0019782393669634025,0.0012059089538739825,0.0011458503846783433,0.0011157318186428644,0.0012143290831815423,0.00089220111262726983,0.0011303084127240433,0.00096571704490584255,0.0011915508214479149,0.00081329906633267185,0.00058875478363261706],"mode":"lines+markers","type":"scatter","name":"Video Production","marker":{"color":"rgba(215,226,25,1)","line":{"color":"rgba(215,226,25,1)"}},"textfont":{"color":"rgba(215,226,25,1)"},"error_y":{"color":"rgba(215,226,25,1)"},"error_x":{"color":"rgba(215,226,25,1)"},"line":{"color":"rgba(215,226,25,1)"},"xaxis":"x","yaxis":"y","frame":null},{"x":[2009,2012,2014,2015,2016,2017,2018,2019],"y":[0.0020790020790020791,0.0015174506828528073,0.00030147723846849563,0.0006547716483876248,0.0044629272745714578,0.015651352627673209,0.0081872572688149476,5.3824210129716346e-05],"mode":"lines+markers","type":"scatter","name":"Violent","marker":{"color":"rgba(235,229,26,1)","line":{"color":"rgba(235,229,26,1)"}},"textfont":{"color":"rgba(235,229,26,1)"},"error_y":{"color":"rgba(235,229,26,1)"},"error_x":{"color":"rgba(235,229,26,1)"},"line":{"color":"rgba(235,229,26,1)"},"xaxis":"x","yaxis":"y","frame":null},{"x":[2012,2013,2014,2015,2016,2017,2018,2019,2020,2021,2022,2023],"y":[0.0015174506828528073,0.0019782393669634025,0.00090443171540548683,0.0009821574725814373,0.00030429049599350845,0.00047223908790393305,0.0003673769287288758,0.00075353894181602881,0.00052675475176682321,0.00039718360714930491,0.00019519177591984123,0.00024531449318025711],"mode":"lines+markers","type":"scatter","name":"Web Publishing","marker":{"color":"rgba(253,231,37,1)","line":{"color":"rgba(253,231,37,1)"}},"textfont":{"color":"rgba(253,231,37,1)"},"error_y":{"color":"rgba(253,231,37,1)"},"error_x":{"color":"rgba(253,231,37,1)"},"line":{"color":"rgba(253,231,37,1)"},"xaxis":"x","yaxis":"y","frame":null}],"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.20000000000000001,"selected":{"opacity":1},"debounce":0},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
+<pre class="r"><code>popular_genres_bar_plot = left_join(genre_freq_year, genre_freq_year_total, by = &quot;year&quot;)|&gt;
+  subset(year &gt; 2005)|&gt;
+  mutate(genre_ratio = n_obs/n_obs_total)|&gt;
+  ggplot(aes(x = year, y = genre_ratio, fill = genres)) + 
+  geom_col(position = &#39;stack&#39;, width = 0.6)+
+  theme(axis.text.x = element_text(angle = 90, vjust = 1, hjust=1))
+popular_genres_bar_plot</code></pre>
+<p><img src="EDA_files/figure-html/unnamed-chunk-15-1.png" width="672" /></p>
+<p>We found some interesting trend from the line plot:</p>
+<p>Rise of Indie Games: A prominent observation is the surge in the
+frequency of the “Indie” genre, particularly after 2012. This phenomenon
+is likely attributable to the increase in the number of computers per
+person. These developments have made it easier for independent game
+developers to create and publish their games.</p>
+<p>Shift in Genre Popularity: The line plot also highlights a noteworthy
+trend in the Action genre. While it remains dominant, it has experienced
+a gradual decline in frequency over the years. This shift may be
+influenced by changing player preferences and the emergence of diverse
+gaming experiences in other genres. It suggests that players are
+increasingly seeking a wider variety of gaming experiences beyond
+traditional action games.</p>
+<p>Casual Games on the Rise: The period from 2012 to 2023 shows an
+increase in the frequency of “Casual” games. This may be indicative of a
+growing market for games that offer accessible and relaxed gameplay
+experiences. This might also indecate people are craving for relaxation
+instead of stimulation.</p>
+<p>Early Access Strategy: The “Early Access” games on Steam experienced
+a notable increase in their frequency. This approach provides
+independent game developers with the opportunity to release their games
+in a partially completed state, allowing them to gather player feedback,
+iterate on their games, and secure investment more easily. The
+popularity of this strategy underscores its effectiveness in the
+independent game development ecosystem.</p>
+</div>
+<div id="word-cloud-visualization" class="section level2">
+<h2>Word Cloud Visualization</h2>
+<p>Wordcloud could help visualize the the frequency of keywords in
+different groups. Here, we separately create word cloud for popular and
+unpopular games.</p>
+<pre class="r"><code>overwhelm_popular_wordcloud = df|&gt;
+  subset((positive+negative) &gt; 500)|&gt;
+  subset(positive/(positive+negative) &gt; 0.95)|&gt;
+  separate_rows(tags, sep = &quot;,&quot;)|&gt;
+  group_by(tags)|&gt;
+  summarise(n_obs = n())|&gt;
+  wordcloud2()
+
+popular_tags_wordcloud = df_popular|&gt;
+  separate_rows(tags, sep = &quot;,&quot;)|&gt;
+  group_by(tags)|&gt;
+  summarise(n_obs = n())|&gt;
+  wordcloud2()
+
+unpopular_tags_wordcloud = df_unpopular|&gt;
+  separate_rows(tags, sep = &quot;,&quot;)|&gt;
+  group_by(tags)|&gt;
+  summarise(n_obs = n())|&gt;
+  wordcloud2()</code></pre>
+<pre class="r"><code>overwhelm_popular_wordcloud</code></pre>
+<div class="wordcloud2 html-widget html-fill-item-overflow-hidden html-fill-item" id="htmlwidget-f6bf9021ffb69c5a95d3" style="width:672px;height:480px;"></div>
+<script type="application/json" data-for="htmlwidget-f6bf9021ffb69c5a95d3">{"x":{"word":["1980s","1990's","2.5D","2D","2D Fighter","2D Platformer","360 Video","3D","3D Fighter","3D Platformer","3D Vision","4 Player Local","4X","6DOF","Abstract","Action","Action RPG","Action RTS","Action Roguelike","Action-Adventure","Addictive","Adventure","Agriculture","Aliens","Alternate History","Ambient","America","Animation & Modeling","Anime","Arcade","Archery","Arena Shooter","Artificial Intelligence","Assassin","Asymmetric VR","Asynchronous Multiplayer","Atmospheric","Audio Production","Auto Battler","Automation","Automobile Sim","BMX","Base-Building","Batman","Battle Royale","Beat 'em up","Beautiful","Blood","Board Game","Boxing","Building","Bullet Hell","Bullet Time","CRPG","Capitalism","Card Battler","Card Game","Cartoon","Cartoony","Casual","Cats","Character Action Game","Character Customization","Chess","Choices Matter","Choose Your Own Adventure","Cinematic","City Builder","Class-Based","Classic","Clicker","Co-op","Co-op Campaign","Cold War","Collectathon","Colony Sim","Colorful","Combat","Combat Racing","Comedy","Comic Book","Competitive","Conspiracy","Controller","Conversation","Cooking","Cozy","Crafting","Creature Collector","Crime","Crowdfunded","Cult Classic","Cute","Cyberpunk","Dark","Dark Comedy","Dark Fantasy","Dark Humor","Dating Sim","Deckbuilding","Demons","Design & Illustration","Destruction","Detective","Difficult","Dinosaurs","Diplomacy","Documentary","Dog","Dragons","Drama","Driving","Dungeon Crawler","Dungeons & Dragons","Dynamic Narration","Dystopian","Early Access","Economy","Education","Emotional","Epic","Episodic","Escape Room","Experience","Experimental","Exploration","FMV","FPS","Faith","Family Friendly","Fantasy","Farming Sim","Fast-Paced","Female Protagonist","Fighting","First-Person","Fishing","Flight","Foreign","Free to Play","Funny","Futuristic","Gambling","Game Development","GameMaker","Games Workshop","Gaming","God Game","Golf","Gore","Gothic","Grand Strategy","Great Soundtrack","Grid-Based Movement","Gun Customization","Hack and Slash","Hacking","Hand-drawn","Heist","Hentai","Hero Shooter","Hex Grid","Hidden Object","Historical","Horror","Horses","Hunting","Idler","Illuminati","Immersive","Immersive Sim","Indie","Interactive Fiction","Inventory Management","Investigation","Isometric","JRPG","Jet","Job Simulator","Jump Scare","Kickstarter","LEGO","LGBTQ+","Level Editor","Life Sim","Linear","Local Co-Op","Local Multiplayer","Logic","Loot","Looter Shooter","Lore-Rich","Lovecraftian","MOBA","Magic","Management","Mars","Martial Arts","Massively Multiplayer","Masterpiece","Match 3","Mature","Mechs","Medieval","Memes","Metroidvania","Military","Mini Golf","Minigames","Minimalist","Mining","Mod","Moddable","Modern","Motorbike","Mouse only","Movie","Multiplayer","Multiple Endings","Music","Music-Based Procedural Generation","Mystery","Mystery Dungeon","Mythology","NSFW","Narration","Narrative","Nature","Naval","Naval Combat","Ninja","Noir","Nonlinear","Nostalgia","Nudity","Offroad","Old School","On-Rails Shooter","Online Co-Op","Open World","Open World Survival Craft","Otome","Parkour","Parody","Party","Party Game","Party-Based RPG","Perma Death","Philosophical","Photo Editing","Physics","Pinball","Pirates","Pixel Graphics","Platformer","Point & Click","Political","Political Sim","Politics","Post-apocalyptic","Precision Platformer","Procedural Generation","Programming","Psychedelic","Psychological","Psychological Horror","Puzzle","Puzzle-Platformer","PvE","PvP","Quick-Time Events","RPG","RPGMaker","RTS","Racing","Real Time Tactics","Real-Time","Real-Time with Pause","Realistic","Reboot","Relaxing","Remake","Replay Value","Resource Management","Retro","Rhythm","Robots","Rogue-like","Rogue-lite","Roguelike Deckbuilder","Roguevania","Romance","Rome","Runner","Sailing","Sandbox","Satire","Sci-fi","Science","Score Attack","Sequel","Sexual Content","Shoot 'Em Up","Shooter","Short","Side Scroller","Silent Protagonist","Simulation","Singleplayer","Skateboarding","Skating","Skiing","Sniper","Snow","Snowboarding","Social Deduction","Software","Sokoban","Solitaire","Souls-like","Soundtrack","Space","Space Sim","Spaceships","Spectacle fighter","Split Screen","Sports","Stealth","Steampunk","Story Rich","Strategy","Strategy RPG","Stylized","Submarine","Superhero","Supernatural","Surreal","Survival","Survival Horror","Swordplay","Tabletop","Tactical","Tactical RPG","Tanks","Team-Based","Tennis","Text-Based","Third Person","Third-Person Shooter","Thriller","Time Attack","Time Management","Time Manipulation","Time Travel","Top-Down","Top-Down Shooter","Touch-Friendly","Tower Defense","Trading","Trading Card Game","Traditional Roguelike","Trains","Transhumanism","Transportation","Trivia","Turn-Based","Turn-Based Combat","Turn-Based Strategy","Turn-Based Tactics","Tutorial","Twin Stick Shooter","Typing","Underwater","Unforgiving","Utilities","VR","VR Only","Vampire","Vehicular Combat","Video Production","Villain Protagonist","Violent","Visual Novel","Voice Control","Voxel","Walking Simulator","War","Wargame","Warhammer 40K","Web Publishing","Well-Written","Western","Wholesome","Word Game","World War I","World War II","Zombies","e-sports"],"freq":[13,33,24,339,11,31,1,77,3,21,7,14,10,2,22,352,33,2,27,50,27,441,2,14,9,1,8,4,227,66,1,18,9,7,2,1,289,5,1,12,8,1,32,1,2,21,35,21,7,1,46,43,6,7,5,6,8,29,55,322,16,5,26,1,94,39,18,17,3,83,12,92,5,3,15,11,136,21,2,137,14,20,5,47,18,5,5,26,7,14,6,18,226,24,77,14,20,35,75,8,14,8,10,38,137,1,3,1,6,6,56,13,22,1,5,18,93,15,20,42,12,8,12,1,17,120,5,85,14,106,121,6,54,142,18,132,4,7,6,3,202,18,2,3,4,6,1,3,2,94,5,11,294,3,4,29,8,58,2,38,2,6,23,26,136,3,3,4,3,6,24,467,47,7,17,22,37,2,1,1,7,3,52,25,19,25,47,42,23,10,6,12,17,1,25,32,1,5,2,5,4,45,8,31,53,21,14,2,7,53,2,4,64,2,1,11,1,150,97,27,5,101,2,6,21,20,6,21,3,5,11,12,8,12,80,1,30,1,37,111,10,4,10,9,7,7,14,19,19,1,61,2,8,157,85,89,2,2,2,37,12,43,6,20,31,126,218,32,15,20,5,173,27,28,10,10,10,7,32,1,101,21,56,22,98,21,21,45,36,4,1,84,1,5,3,87,7,111,13,18,4,92,32,109,52,39,7,168,622,2,1,1,1,1,2,1,7,6,1,14,17,32,5,1,6,4,17,28,11,325,140,4,64,1,5,9,48,59,36,6,5,31,11,1,10,1,18,56,13,13,1,8,5,11,36,11,22,19,1,2,4,6,2,6,5,33,22,22,12,3,7,2,8,1,7,26,13,4,6,1,5,79,169,1,6,23,24,4,3,1,2,6,6,13,2,6,28,7],"fontFamily":"Segoe UI","fontWeight":"bold","color":"random-dark","minSize":0,"weightFactor":0.2893890675241158,"backgroundColor":"white","gridSize":0,"minRotation":-0.7853981633974483,"maxRotation":0.7853981633974483,"shuffle":true,"rotateRatio":0.4,"shape":"circle","ellipticity":0.65,"figBase64":null,"hover":null},"evals":[],"jsHooks":{"render":[{"code":"function(el,x){\n                        console.log(123);\n                        if(!iii){\n                          window.location.reload();\n                          iii = False;\n\n                        }\n  }","data":null}]}}</script>
+<pre class="r"><code>popular_tags_wordcloud</code></pre>
+<div class="wordcloud2 html-widget html-fill-item-overflow-hidden html-fill-item" id="htmlwidget-ca360cfb864b13fa5f19" style="width:672px;height:480px;"></div>
+<script type="application/json" data-for="htmlwidget-ca360cfb864b13fa5f19">{"x":{"word":["1980s","1990's","2.5D","2D","2D Fighter","2D Platformer","360 Video","3D","3D Fighter","3D Platformer","3D Vision","4 Player Local","4X","6DOF","ATV","Abstract","Action","Action RPG","Action RTS","Action Roguelike","Action-Adventure","Addictive","Adventure","Agriculture","Aliens","Alternate History","Ambient","America","Animation & Modeling","Anime","Arcade","Archery","Arena Shooter","Artificial Intelligence","Assassin","Asymmetric VR","Asynchronous Multiplayer","Atmospheric","Audio Production","Auto Battler","Automation","Automobile Sim","BMX","Base-Building","Baseball","Based On A Novel","Basketball","Batman","Battle Royale","Beat 'em up","Beautiful","Benchmark","Bikes","Blood","Board Game","Boss Rush","Bowling","Boxing","Building","Bullet Hell","Bullet Time","CRPG","Capitalism","Card Battler","Card Game","Cartoon","Cartoony","Casual","Cats","Character Action Game","Character Customization","Chess","Choices Matter","Choose Your Own Adventure","Cinematic","City Builder","Class-Based","Classic","Clicker","Co-op","Co-op Campaign","Cold War","Collectathon","Colony Sim","Colorful","Combat","Combat Racing","Comedy","Comic Book","Competitive","Conspiracy","Controller","Conversation","Cooking","Cozy","Crafting","Creature Collector","Crime","Crowdfunded","Cult Classic","Cute","Cyberpunk","Cycling","Dark","Dark Comedy","Dark Fantasy","Dark Humor","Dating Sim","Deckbuilding","Demons","Design & Illustration","Destruction","Detective","Difficult","Dinosaurs","Diplomacy","Documentary","Dog","Dragons","Drama","Driving","Dungeon Crawler","Dungeons & Dragons","Dynamic Narration","Dystopian","Early Access","Economy","Education","Electronic","Electronic Music","Emotional","Epic","Episodic","Escape Room","Experience","Experimental","Exploration","FMV","FPS","Faith","Family Friendly","Fantasy","Farming","Farming Sim","Fast-Paced","Feature Film","Female Protagonist","Fighting","First-Person","Fishing","Flight","Football","Foreign","Free to Play","Funny","Futuristic","Gambling","Game Development","GameMaker","Games Workshop","Gaming","God Game","Golf","Gore","Gothic","Grand Strategy","Great Soundtrack","Grid-Based Movement","Gun Customization","Hack and Slash","Hacking","Hand-drawn","Hardware","Heist","Hentai","Hero Shooter","Hex Grid","Hidden Object","Historical","Hockey","Horror","Horses","Hunting","Idler","Illuminati","Immersive","Immersive Sim","Indie","Instrumental Music","Intentionally Awkward Controls","Interactive Fiction","Inventory Management","Investigation","Isometric","JRPG","Jet","Jump Scare","Kickstarter","LEGO","LGBTQ+","Lemmings","Level Editor","Life Sim","Linear","Local Co-Op","Local Multiplayer","Logic","Loot","Looter Shooter","Lore-Rich","Lovecraftian","MMORPG","MOBA","Magic","Management","Mars","Martial Arts","Massively Multiplayer","Masterpiece","Match 3","Mature","Mechs","Medical Sim","Medieval","Memes","Metroidvania","Military","Mini Golf","Minigames","Minimalist","Mining","Mod","Moddable","Modern","Motocross","Motorbike","Mouse only","Movie","Multiplayer","Multiple Endings","Music","Music-Based Procedural Generation","Musou","Mystery","Mystery Dungeon","Mythology","NSFW","Narration","Narrative","Nature","Naval","Naval Combat","Ninja","Noir","Nonlinear","Nostalgia","Nudity","Offroad","Old School","On-Rails Shooter","Online Co-Op","Open World","Open World Survival Craft","Otome","Outbreak Sim","Parkour","Parody","Party","Party Game","Party-Based RPG","Perma Death","Philosophical","Photo Editing","Physics","Pinball","Pirates","Pixel Graphics","Platformer","Point & Click","Political","Political Sim","Politics","Pool","Post-apocalyptic","Precision Platformer","Procedural Generation","Programming","Psychedelic","Psychological","Psychological Horror","Puzzle","Puzzle-Platformer","PvE","PvP","Quick-Time Events","RPG","RPGMaker","RTS","Racing","Real Time Tactics","Real-Time","Real-Time with Pause","Realistic","Reboot","Relaxing","Remake","Replay Value","Resource Management","Retro","Rhythm","Robots","Rock Music","Rogue-like","Rogue-lite","Roguelike Deckbuilder","Roguevania","Romance","Rome","Runner","Sailing","Sandbox","Satire","Sci-fi","Science","Score Attack","Sequel","Sexual Content","Shoot 'Em Up","Shooter","Short","Side Scroller","Silent Protagonist","Simulation","Singleplayer","Skateboarding","Skating","Skiing","Sniper","Snow","Snowboarding","Soccer","Social Deduction","Software","Software Training","Sokoban","Solitaire","Souls-like","Soundtrack","Space","Space Sim","Spaceships","Spectacle fighter","Spelling","Split Screen","Sports","Stealth","Steam Machine","Steampunk","Story Rich","Strategy","Strategy RPG","Stylized","Submarine","Superhero","Supernatural","Surreal","Survival","Survival Horror","Swordplay","Tabletop","Tactical","Tactical RPG","Tanks","Team-Based","Tennis","Text-Based","Third Person","Third-Person Shooter","Thriller","Time Attack","Time Management","Time Manipulation","Time Travel","Top-Down","Top-Down Shooter","Touch-Friendly","Tower Defense","TrackIR","Trading","Trading Card Game","Traditional Roguelike","Trains","Transhumanism","Transportation","Trivia","Turn-Based","Turn-Based Combat","Turn-Based Strategy","Turn-Based Tactics","Tutorial","Twin Stick Shooter","Typing","Underground","Underwater","Unforgiving","Utilities","VR","VR Only","Vampire","Vehicular Combat","Video Production","Vikings","Villain Protagonist","Violent","Visual Novel","Voice Control","Voxel","Walking Simulator","War","Wargame","Warhammer 40K","Web Publishing","Well-Written","Werewolves","Western","Wholesome","Word Game","World War I","World War II","Wrestling","Zombies","e-sports"],"freq":[62,133,137,1649,74,108,2,435,27,133,44,159,91,10,4,60,2845,358,14,205,331,83,2845,59,135,91,4,34,19,900,531,10,62,46,46,3,23,1646,10,27,63,116,4,291,3,19,3,1,13,148,122,5,16,79,116,2,1,5,426,179,41,94,49,58,120,136,216,1719,47,44,374,4,451,146,102,199,51,486,54,923,61,40,45,116,520,182,24,660,70,140,28,428,60,24,6,301,34,102,34,106,753,169,4,361,53,219,164,209,68,85,45,122,185,904,27,37,3,20,42,167,150,215,17,32,97,622,230,110,2,4,127,49,50,63,10,58,744,42,502,21,531,926,15,65,214,1,878,157,855,45,83,14,11,22,965,175,5,26,30,32,3,55,6,549,62,128,1567,35,42,314,40,216,3,30,161,12,65,127,302,1,768,17,37,26,44,22,143,3248,1,6,132,60,92,269,341,10,5,81,29,125,7,142,90,89,379,366,78,120,28,67,95,34,9,189,458,21,53,103,7,49,286,83,10,213,259,164,209,5,18,181,40,16,274,42,9,26,56,9,1570,326,113,18,15,402,19,75,82,103,24,72,45,30,54,70,45,56,466,22,163,13,492,959,89,19,9,105,43,22,34,120,140,33,6,307,7,50,824,609,466,54,46,48,3,247,44,286,30,70,89,457,1136,200,137,270,29,1550,150,289,212,114,86,103,352,7,364,128,362,263,586,77,152,4,409,360,34,11,193,24,34,16,678,36,817,56,73,35,462,192,763,222,334,21,1355,3932,7,7,3,18,6,4,10,17,48,10,13,12,95,80,342,70,7,39,2,88,192,230,2,92,1548,1597,129,248,13,44,82,190,576,244,48,89,424,142,41,116,2,64,651,170,90,24,84,36,48,345,116,70,163,10,47,21,24,47,14,35,9,486,278,353,217,37,101,22,10,39,11,41,199,66,38,39,7,17,57,484,460,6,60,169,289,82,22,16,4,10,31,8,34,28,109,5,217,56],"fontFamily":"Segoe UI","fontWeight":"bold","color":"random-dark","minSize":0,"weightFactor":0.04577822990844354,"backgroundColor":"white","gridSize":0,"minRotation":-0.7853981633974483,"maxRotation":0.7853981633974483,"shuffle":true,"rotateRatio":0.4,"shape":"circle","ellipticity":0.65,"figBase64":null,"hover":null},"evals":[],"jsHooks":{"render":[{"code":"function(el,x){\n                        console.log(123);\n                        if(!iii){\n                          window.location.reload();\n                          iii = False;\n\n                        }\n  }","data":null}]}}</script>
+<pre class="r"><code>unpopular_tags_wordcloud</code></pre>
+<div class="wordcloud2 html-widget html-fill-item-overflow-hidden html-fill-item" id="htmlwidget-25080c0ebde70ecd5db0" style="width:672px;height:480px;"></div>
+<script type="application/json" data-for="htmlwidget-25080c0ebde70ecd5db0">{"x":{"word":["","1980s","1990's","2.5D","2D","2D Fighter","2D Platformer","360 Video","3D","3D Fighter","3D Platformer","3D Vision","4 Player Local","4X","6DOF","8-bit Music","ATV","Abstract","Action","Action RPG","Action RTS","Action Roguelike","Action-Adventure","Addictive","Adventure","Agriculture","Aliens","Alternate History","Ambient","America","Animation & Modeling","Anime","Arcade","Archery","Arena Shooter","Artificial Intelligence","Assassin","Asymmetric VR","Asynchronous Multiplayer","Atmospheric","Audio Production","Auto Battler","Automation","Automobile Sim","BMX","Base-Building","Baseball","Based On A Novel","Basketball","Battle Royale","Beat 'em up","Beautiful","Benchmark","Bikes","Birds","Blood","Board Game","Boss Rush","Bowling","Boxing","Building","Bullet Hell","Bullet Time","CRPG","Capitalism","Card Battler","Card Game","Cartoon","Cartoony","Casual","Cats","Character Action Game","Character Customization","Chess","Choices Matter","Choose Your Own Adventure","Cinematic","City Builder","Class-Based","Classic","Clicker","Co-op","Co-op Campaign","Coding","Cold War","Collectathon","Colony Sim","Colorful","Combat","Combat Racing","Comedy","Comic Book","Competitive","Conspiracy","Controller","Conversation","Cooking","Cozy","Crafting","Creature Collector","Cricket","Crime","Crowdfunded","Cult Classic","Cute","Cyberpunk","Cycling","Dark","Dark Comedy","Dark Fantasy","Dark Humor","Dating Sim","Deckbuilding","Demons","Design & Illustration","Destruction","Detective","Difficult","Dinosaurs","Diplomacy","Documentary","Dog","Dragons","Drama","Driving","Dungeon Crawler","Dungeons & Dragons","Dynamic Narration","Dystopian","Early Access","Economy","Education","Electronic","Electronic Music","Emotional","Epic","Episodic","Escape Room","Experience","Experimental","Exploration","FMV","FPS","Faith","Family Friendly","Fantasy","Farming","Farming Sim","Fast-Paced","Feature Film","Female Protagonist","Fighting","First-Person","Fishing","Flight","Football","Football (American)","Football (Soccer)","Foreign","Fox","Free to Play","Funny","Futuristic","Gambling","Game Development","GameMaker","Games Workshop","Gaming","God Game","Golf","Gore","Gothic","Grand Strategy","Great Soundtrack","Grid-Based Movement","Gun Customization","Hack and Slash","Hacking","Hand-drawn","Hardware","Heist","Hentai","Hero Shooter","Hex Grid","Hidden Object","Historical","Hobby Sim","Hockey","Horror","Horses","Hunting","Idler","Illuminati","Immersive","Immersive Sim","Indie","Instrumental Music","Intentionally Awkward Controls","Interactive Fiction","Inventory Management","Investigation","Isometric","JRPG","Jet","Job Simulator","Jump Scare","Kickstarter","LEGO","LGBTQ+","Lemmings","Level Editor","Life Sim","Linear","Local Co-Op","Local Multiplayer","Logic","Loot","Looter Shooter","Lore-Rich","Lovecraftian","MMORPG","MOBA","Magic","Mahjong","Management","Mars","Martial Arts","Massively Multiplayer","Masterpiece","Match 3","Mature","Mechs","Medical Sim","Medieval","Memes","Metroidvania","Military","Mini Golf","Minigames","Minimalist","Mining","Mod","Moddable","Modern","Motocross","Motorbike","Mouse only","Movie","Multiplayer","Multiple Endings","Music","Music-Based Procedural Generation","Musou","Mystery","Mystery Dungeon","Mythology","NSFW","Narration","Narrative","Nature","Naval","Naval Combat","Ninja","Noir","Nonlinear","Nostalgia","Nudity","Offroad","Old School","On-Rails Shooter","Online Co-Op","Open World","Open World Survival Craft","Otome","Outbreak Sim","Parkour","Parody","Party","Party Game","Party-Based RPG","Perma Death","Philosophical","Photo Editing","Physics","Pinball","Pirates","Pixel Graphics","Platformer","Point & Click","Political","Political Sim","Politics","Pool","Post-apocalyptic","Precision Platformer","Procedural Generation","Programming","Psychedelic","Psychological","Psychological Horror","Puzzle","Puzzle-Platformer","PvE","PvP","Quick-Time Events","RPG","RPGMaker","RTS","Racing","Real Time Tactics","Real-Time","Real-Time with Pause","Realistic","Reboot","Relaxing","Remake","Replay Value","Resource Management","Retro","Rhythm","Robots","Rock Music","Rogue-like","Rogue-lite","Roguelike Deckbuilder","Roguevania","Romance","Rome","Rugby","Runner","Sailing","Sandbox","Satire","Sci-fi","Science","Score Attack","Sequel","Sexual Content","Shoot 'Em Up","Shooter","Shop Keeper","Short","Side Scroller","Silent Protagonist","Simulation","Singleplayer","Skateboarding","Skating","Skiing","Sniper","Snow","Snowboarding","Soccer","Social Deduction","Software","Software Training","Sokoban","Solitaire","Souls-like","Soundtrack","Space","Space Sim","Spaceships","Spectacle fighter","Spelling","Split Screen","Sports","Stealth","Steam Machine","Steampunk","Story Rich","Strategy","Strategy RPG","Stylized","Submarine","Superhero","Supernatural","Surreal","Survival","Survival Horror","Swordplay","Tabletop","Tactical","Tactical RPG","Tanks","Team-Based","Tennis","Text-Based","Third Person","Third-Person Shooter","Thriller","Tile-Matching","Time Attack","Time Management","Time Manipulation","Time Travel","Top-Down","Top-Down Shooter","Touch-Friendly","Tower Defense","TrackIR","Trading","Trading Card Game","Traditional Roguelike","Trains","Transhumanism","Transportation","Trivia","Turn-Based","Turn-Based Combat","Turn-Based Strategy","Turn-Based Tactics","Tutorial","Twin Stick Shooter","Typing","Underground","Underwater","Unforgiving","Utilities","VR","VR Only","Vampire","Vehicular Combat","Video Production","Vikings","Villain Protagonist","Violent","Visual Novel","Voice Control","Volleyball","Voxel","Walking Simulator","War","Wargame","Warhammer 40K","Web Publishing","Well-Written","Werewolves","Western","Wholesome","Word Game","World War I","World War II","Wrestling","Zombies","e-sports"],"freq":[10377,1131,1490,1046,13388,623,3287,54,7716,412,1828,358,885,204,404,24,18,1203,21193,1799,160,1329,4386,301,19945,300,954,499,63,309,261,4313,6206,157,897,710,164,79,152,7987,153,212,317,617,20,1058,54,57,71,269,747,505,8,80,1,281,1015,22,32,124,1880,1657,346,471,286,416,979,1785,2839,21443,548,458,1778,135,2575,1500,846,705,240,947,1068,2195,269,2,152,651,323,7056,3191,340,2890,603,555,271,3096,764,229,102,1435,347,19,455,57,173,6170,925,39,2680,420,1258,850,882,425,801,505,563,932,3850,205,115,18,264,353,1474,902,1368,41,200,602,6822,785,1403,24,60,1211,54,63,173,139,884,5855,282,2750,213,4737,5404,76,329,1234,12,3690,686,5480,187,921,141,2,12,139,1,239,4746,1738,113,258,123,38,46,275,109,2395,245,402,2413,639,286,1364,227,2024,13,117,475,355,286,2210,1261,3,40,4324,122,237,591,174,167,1208,30791,34,41,1517,508,997,1134,1342,101,16,23,91,56,714,50,612,835,2832,1395,1885,2230,565,226,618,346,113,97,1926,3,1904,129,270,625,21,662,759,286,75,1572,929,693,984,68,223,3146,235,31,372,594,42,89,434,62,4210,2339,740,141,12,2777,439,468,361,1007,192,1293,188,129,270,389,738,94,1798,147,2275,183,1135,2793,290,276,91,540,335,170,192,579,960,433,105,2918,93,249,7051,4958,2729,263,184,186,44,1198,1149,1824,261,765,799,2406,8881,2255,1900,2134,259,8261,1007,928,2016,781,236,166,2623,8,4631,180,1366,1344,5063,550,940,23,1995,1853,125,78,1173,78,7,850,140,2100,247,4279,430,1567,111,1872,2011,4766,6,1068,2515,83,9884,24360,39,32,26,106,171,20,134,46,308,135,358,399,562,470,2381,507,78,322,105,388,2474,1109,9,259,6132,9716,802,3344,68,176,647,1282,3312,1684,393,986,1894,663,252,562,52,1227,3197,926,761,1,195,931,329,241,3377,1320,155,971,23,226,132,145,152,81,180,189,1102,1557,1676,1532,727,637,178,268,248,107,529,3815,946,179,349,159,51,108,2904,2923,21,11,345,1446,1248,719,26,75,13,85,196,85,410,88,419,44,1434,317],"fontFamily":"Segoe UI","fontWeight":"bold","color":"random-dark","minSize":0,"weightFactor":0.005845864051183787,"backgroundColor":"white","gridSize":0,"minRotation":-0.7853981633974483,"maxRotation":0.7853981633974483,"shuffle":true,"rotateRatio":0.4,"shape":"circle","ellipticity":0.65,"figBase64":null,"hover":null},"evals":[],"jsHooks":{"render":[{"code":"function(el,x){\n                        console.log(123);\n                        if(!iii){\n                          window.location.reload();\n                          iii = False;\n\n                        }\n  }","data":null}]}}</script>
+<p>The distinctions revealed among the three word clouds are insightful
+and provide valuable context for understanding the characteristics that
+differentiate popular and unpopular games:</p>
+<p>Prevalence of Adventure Games in Unpopular Games: Adventure games
+appear to be more prevalent among unpopular games and are less common in
+popular games. This discrepancy may stem from the accessibility of game
+development tools like RPG Maker, which enables the creation of
+adventure games with relative ease. Consequently, the market may be
+flooded with a range of adventure games of varying quality, leading to
+their uneven representation among unpopular titles.</p>
+<p>Emphasis on Difficulty in Popular Games: The word cloud for popular
+games prominently features the tag “difficult.” This aligns with the
+reality that some of the most highly regarded games in the industry,
+such as Elden Ring and Sekiro: Shadows Die Twice, are renowned for their
+challenging gameplay. The presence of this tag underscores the appeal of
+a high level of difficulty in certain popular titles.</p>
+<p>Ratio of 2D to 3D Games: Notably, the word cloud suggests that the
+ratio of 2D games to 3D games is higher in popular games compared to
+unpopular ones. This observation may be attributed to resource
+constraints faced by smaller game development studios. In many cases,
+these studios may prioritize the development of engaging plotlines and
+intricate game mechanics over the creation of elaborate 3D environments,
+resulting in a higher prevalence of 2D games among popular titles.</p>
+<p>Popularity of Pixel Graphics: The higher frequency of the “pixel
+graphics” tag in popular games is an intriguing finding. Pixel graphics
+are favored by independent developers as they allow a strong focus on
+game mechanics. This aligns with the success stories of games like
+Terraria and Minecraft, which have leveraged pixel graphics to create
+immersive and engaging gameplay experiences. The appeal of pixel
+graphics in popular games reflects the importance of gameplay and
+mechanics in driving their popularity.</p>
+</div>
+</div>
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+
+<script>
+$(document).ready(function ()  {
+
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
